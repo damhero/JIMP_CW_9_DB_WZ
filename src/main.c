@@ -6,6 +6,7 @@
 
 
 int main(int argc, char ** argv) {
+	FILE* file = fopen("./bin/bin","w");
 	int res;
 	Matrix * A = readFromFile(argv[1]);
 	Matrix * b = readFromFile(argv[2]);
@@ -17,6 +18,7 @@ int main(int argc, char ** argv) {
 	printToScreen(b);
 
 	res = eliminate(A,b);
+	fprintf(file,"Result: %d\n", res);
 	x = createMatrix(b->r, 1);
 	if (x != NULL) {
 		res = backsubst(x,A,b);

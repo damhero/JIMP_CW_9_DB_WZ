@@ -1,6 +1,7 @@
 #include "gauss.h"
 #include <stdio.h>
 #include <math.h>
+#include "backsubst.h"
 
 /**
  * Zwraca 0 - eliminacja zakonczona sukcesem
@@ -32,32 +33,6 @@ int eliminate(Matrix *mat, Matrix *b) {
     return 0; // Eliminacja zakonczona sukcesem
 }
 
-/**
- * Rozwiązuje układ równań przy użyciu podstawiania wstecznego.
- *
- * Zwraca 0 - sukces
- * Zwraca 1 - dzielenie przez 0 (macierz osobliwa)
- */
-int backsubst(Matrix *mat, Matrix *b, Matrix *x) {
-    int n = mat->r;
-
-    for (int i = n - 1; i >= 0; i--) {
-        // Sprawdzenie dzielenia przez zero (osobliwość)
-        if (fabs(mat->data[i][i]) < 1e-12) {
-            return 1; // Macierz osobliwa
-        }
-
-        double sum = b->data[i][0];
-
-        for (int j = i + 1; j < n; j++) {
-            sum -= mat->data[i][j] * x->data[j][0];
-        }
-
-        x->data[i][0] = sum / mat->data[i][i];
-    }
-
-    return 0; // Sukces
-}
 
 /**
  * Funkcja rozwiazuje uklad rownan Ax = b.
