@@ -34,7 +34,7 @@ int main(int argc, char ** argv) {
 			freeMatrix(x);
 			freeMatrix(A);
 			freeMatrix(b);
-			fprintf(stderr,"Macierz osobliwa.\n");
+			fprintf(stderr,"[!] Macierz osobliwa.\n");
 			return EXIT_SUCCESS;
 		}
 	} else {
