@@ -7,6 +7,7 @@
  * Zwraca 1 - błąd dzielenia przez 0 (element na diagonali = 0)
  * Zwraca 2 - błąd nieprawidłowych rozmiarów macierzy
  */
+
 int  backsubst(Matrix *x, Matrix *mat, Matrix *b) {
 	// Sprawdzenie, czy rozmiary macierzy są poprawne
 	if (mat->r != mat->c || mat->r != b->r || b->c != 1 || x->r != b->r || x->c != 1) {

@@ -1,6 +1,22 @@
 #include "gauss.h"
+#include "backsubst.h"
 #include <stdio.h>
 #include <math.h>
+#define EPSILON 1e-10
+
+
+
+
+void swapRows(Matrix *mat, Matrix *b, int row1, int row2) {
+    double *temp = mat->data[row1];
+    mat->data[row1] = mat->data[row2];
+    mat->data[row2] = temp;
+
+    // Zamiana w macierzy wyników (b)
+    double temp_b = b->data[row1][0];
+    b->data[row1][0] = b->data[row2][0];
+    b->data[row2][0] = temp_b;
+}
 
 /**
  * Zwraca 0 - eliminacja zakonczona sukcesem
@@ -10,8 +26,21 @@ int eliminate(Matrix *mat, Matrix *b) {
     int n = mat->r; // Zakładamy, że macierz jest kwadratowa: r == c
 
     for (int k = 0; k < n - 1; k++) {
-        // Sprawdzenie dzielenia przez zero (osobliwość)
-        if (fabs(mat->data[k][k]) < 1e-12) {
+        // znajdywanie największego elementu w kolumnie k
+        int max_row = k;
+        for (int i = k + 1; i < n; i++) {
+            if (fabs(mat->data[i][k]) > fabs(mat->data[max_row][k])) {
+                max_row = i;
+            }
+        }
+
+        // Zamiana wierszy, jeśli konieczne
+        if (max_row != k) {
+            swapRows(mat, b, k, max_row);
+        }
+
+        // Sprawdzenie osobliwości macierzy (dzielenia przez zero)
+        if (fabs(mat->data[k][k]) < EPSILON) {
             return 1; // Macierz osobliwa
         }
 
@@ -32,32 +61,6 @@ int eliminate(Matrix *mat, Matrix *b) {
     return 0; // Eliminacja zakonczona sukcesem
 }
 
-/**
- * Rozwiązuje układ równań przy użyciu podstawiania wstecznego.
- *
- * Zwraca 0 - sukces
- * Zwraca 1 - dzielenie przez 0 (macierz osobliwa)
- */
-int backsubst(Matrix *mat, Matrix *b, Matrix *x) {
-    int n = mat->r;
-
-    for (int i = n - 1; i >= 0; i--) {
-        // Sprawdzenie dzielenia przez zero (osobliwość)
-        if (fabs(mat->data[i][i]) < 1e-12) {
-            return 1; // Macierz osobliwa
-        }
-
-        double sum = b->data[i][0];
-
-        for (int j = i + 1; j < n; j++) {
-            sum -= mat->data[i][j] * x->data[j][0];
-        }
-
-        x->data[i][0] = sum / mat->data[i][i];
-    }
-
-    return 0; // Sukces
-}
 
 /**
  * Funkcja rozwiazuje uklad rownan Ax = b.

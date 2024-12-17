@@ -9,5 +9,6 @@
  */
 int eliminate(Matrix *mat, Matrix *b);
 int solve(Matrix *mat, Matrix *b, Matrix *x);
+void swapRows(Matrix *mat, Matrix *b, int row1, int row2);
 
 #endif
