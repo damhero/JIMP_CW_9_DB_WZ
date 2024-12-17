@@ -12,9 +12,24 @@ int eliminate(Matrix *mat, Matrix *b) {
 
     for (int k = 0; k < n - 1; k++) {
         // Sprawdzenie dzielenia przez zero (osobliwość)
-        if (fabs(mat->data[k][k]) < 1e-12) {
-            return 1; // Macierz osobliwa
+        int maxRow = k;
+    for (int i = k + 1; i < n; i++) {
+        if (fabs(mat->data[i][k]) > fabs(mat->data[maxRow][k])) {
+            maxRow = i; // Znaleziono nowy największy element
         }
+    }
+    if (maxRow != k) {
+        // Zamiana wierszy mat
+        for (int j = 0; j < n; j++) {
+            double temp = mat->data[k][j];
+            mat->data[k][j] = mat->data[maxRow][j];
+            mat->data[maxRow][j] = temp;
+        }
+        // Zamiana elementów w macierzy b
+        double tempB = b->data[k][0];
+        b->data[k][0] = b->data[maxRow][0];
+        b->data[maxRow][0] = tempB;
+    }
 
         // Eliminacja Gaussa
         for (int i = k + 1; i < n; i++) {
